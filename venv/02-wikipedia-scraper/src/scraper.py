@@ -5,6 +5,18 @@ import regex as re
 from bs4 import BeautifulSoup
 
 class WikipediaScraper:
+
+    """
+        Initialize the WikipediaScraper.
+
+        Parameters:
+        - base_url (str): The base URL for the Wikipedia scraper API.
+        - country_endpoint (str): The endpoint for retrieving countries.
+        - leaders_endpoint (str): The endpoint for retrieving leaders.
+        - cookies_endpoint (str): The endpoint for managing cookies.
+        - leaders_data (dict): A dictionary to store leader information.
+        """
+    
     def __init__(self, base_url: str,
                  country_endpoint: str,
                  leaders_endpoint: str,
@@ -16,6 +28,11 @@ class WikipediaScraper:
         self.cookies_endpoint = cookies_endpoint
         self.leaders_data = leaders_data
         self.session = requests.Session()
+###########################################################################################""
+        """
+        Refresh the user's cookie every search.
+        """
+############################################################################################
 
     def refresh_cookie(self):
         cookie_req = self.session.get(self.base_url + self.cookies_endpoint)
@@ -23,7 +40,11 @@ class WikipediaScraper:
             return cookie_req.cookies.get('user_cookie')
         else:
             print(f"Status Code: {cookie_req.status_code}")
-
+###########################################################################################""
+        """
+        Reterive the list of countries from API
+        """
+############################################################################################
     def get_countries(self):
         self.refresh_cookie()
         countries_url = self.base_url + self.country_endpoint
@@ -33,6 +54,12 @@ class WikipediaScraper:
             return countries_req.json()
         else:
             print(f"Status Code: {countries_req.status_code}")
+
+###########################################################################################""
+        """
+        Retrieves and processes the list of leaders for a specific country.
+        """
+############################################################################################
 
     def get_leaders(self, country):
         self.refresh_cookie()
@@ -56,6 +83,16 @@ class WikipediaScraper:
         self.to_json_file("leaders_data.json")
         self.to_csv_file("leaders_data.csv")
 
+########################################################################################################""""""
+        """
+        Retrive the first paragraph of the Wikipedia page, 
+        Removing references.
+        Print cleaned first paragraph text.
+        """
+################################################################################################################
+
+
+
     def get_first_paragraph(self, wikipedia_url):
         response = self.session.get(wikipedia_url)
         response.raise_for_status()
@@ -67,6 +104,14 @@ class WikipediaScraper:
                 extract_first_paragraph = re.sub(r'\[\d+\]', '', extract_first_paragraph1.get_text())
                 return extract_first_paragraph
 
+##################################################################################################################
+
+        """
+        Save the scrapped leaders info in json file and the CSV file with the leaders informations
+
+        """
+
+##################################################################################################################
     def to_json_file(self, filepath):
         with open(filepath, 'w') as json_file:
             json.dump(self.leaders_data, json_file, indent=4)
@@ -76,11 +121,7 @@ class WikipediaScraper:
         data_list = []
         for country, leaders in self.leaders_data.items():
             for leader_info in leaders:
-                leader_info['country'] = country  # Add a 'country' column
+                leader_info['country'] = country  
                 data_list.append(leader_info)
-
-        # Create a DataFrame
         result_df = pd.DataFrame(data_list)
-
-        # Save the DataFrame to CSV
         result_df.to_csv(filepath, index=False, encoding='utf-8')
