@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+import regex as re
 from bs4 import BeautifulSoup
 
 class WikipediaScraper:
@@ -62,8 +63,9 @@ class WikipediaScraper:
 
         for tag in soup.find_all("p"):
             if "<p><b>" in str(tag):
-                extract_first_paragraph = tag
-                return extract_first_paragraph.get_text()
+                extract_first_paragraph1 = tag
+                extract_first_paragraph = re.sub(r'\[\d+\]', '', extract_first_paragraph1.get_text())
+                return extract_first_paragraph
 
     def to_json_file(self, filepath):
         with open(filepath, 'w') as json_file:
