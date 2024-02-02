@@ -10,10 +10,10 @@ class WikipediaScraper:
                  cookies_endpoint: str,
                  leaders_data: dict):
         self.base_url = base_url
-        self.country_endpoint = "/countries"
-        self.leaders_endpoint = "/leaders"
-        self.cookies_endpoint = "/cookie"
-        self.leaders_data = {}
+        self.country_endpoint = country_endpoint
+        self.leaders_endpoint = leaders_endpoint
+        self.cookies_endpoint = cookies_endpoint
+        self.leaders_data = leaders_data
         self.session = requests.Session()
 
     def refresh_cookie(self):
