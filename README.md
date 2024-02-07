@@ -24,7 +24,7 @@ To run the Wikipedia Scraper, ensure you have the following installed:
 1. Clone the repository:
 
     
-    git clone git@github.com:Nithyaraaj21/wikipedia-scraper_Project2.git
+    git clone git@github.com:Nithyaraaj21/wikipedia-scraper.git
    
 
 2. Install the required packages:
